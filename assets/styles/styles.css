@@ -67,3 +67,10 @@ body {
     height: 24px
 }
 
+.badge{
+    width: 35%;
+}
+
+.card-img-top{
+    height:220px;
+}
