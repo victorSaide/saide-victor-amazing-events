@@ -1,6 +1,5 @@
 const container = document.getElementById('container');
 const fragment = document.createDocumentFragment();
-console.log(data);
 
 function showCards(array, container){
     for(let element of data.events){
@@ -24,5 +23,3 @@ function showCards(array, container){
     container.appendChild(fragment);
 }
 showCards(data,container);
-
-console.log([data].name);
