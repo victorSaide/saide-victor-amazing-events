@@ -1,8 +1,10 @@
 const container = document.getElementById('container');
 const fragment = document.createDocumentFragment();
 
-function showCards(array, container){
-    for(let element of data.events){
+// this function shows all cards in index.html
+function showCards(array, container){ // container parameter line 5
+    for(let element of array){
+        container.innerHTML = '';
         let div = document.createElement('div');
         div.className="card d-flex col-xl-3 p-3 m-2 col-lg-3 p-3 m-2 col-md-5 p-3 m-2 col-sm-10 col-xs-10 p-2";
         div.innerHTML = `
@@ -22,4 +24,59 @@ function showCards(array, container){
     }
     container.appendChild(fragment);
 }
-showCards(data,container);
+showCards(data.events,container); // container const line 1
+
+// checkbox categories
+// 1. get unrepeated categories
+const checkBoxContainer = document.getElementById('check-box-container');
+let typeOfEvents = [];
+
+let arrayTypeOfEvents = data.events.map(event => {
+    if(!typeOfEvents.includes(event.category)){
+        typeOfEvents.push(event.category);
+    }
+})
+console.log(typeOfEvents); // it shows the 7 categories
+
+
+// 2. introducing content to html filetype
+
+let fragmentCheckBox = document.createDocumentFragment();
+
+for (let category of typeOfEvents){
+    let div = document.createElement('div');
+    div.className="form-check px-3 d-flex justify-content-evenly";
+    div.innerHTML = `
+    <label class="form-check-label">${category}
+        <input class="form-check-input" value="${category}" type="checkbox" name="" id="${category}"/>
+    </label>   
+    `
+    fragmentCheckBox.appendChild(div);
+}
+checkBoxContainer.appendChild(fragmentCheckBox);
+
+// 3. get all checkboxes and filter
+let checkboxes = document.querySelectorAll('input[type="checkbox"]')
+checkboxes.forEach(check => check.addEventListener("change",()=>{
+    let selectedChecked = Array.from(checkboxes).filter(check =>check.checked).map(elem => elem.value)
+    let cardsChecks = (filterArrayByArray(selectedChecked,data.events))
+    showCards (cardsChecks,container)
+}));
+
+function filterArrayByArray(arrayStrings,arrayObjet){
+    return arrayStrings.length === 0 ? arrayObjet : arrayObjet.filter(element => arrayStrings.includes(element.category))
+}
+
+// search bar
+const searchBar = document.getElementById('searchBar');
+
+searchBar.addEventListener('keyup',(e) => {
+    let inputText = searchBar.value;
+    console.log(filterArrayByString(inputText)); /////////////////// 
+})
+
+function filterArrayByString(value,arrayObjet){
+    if(value == '') return arrayObjet;
+    let newArray = data.events.filter(element => element.data.events.lowerCase().includes(value.toLowerCase().trim),
+    newArray)
+}
