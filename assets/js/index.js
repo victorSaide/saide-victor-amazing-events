@@ -53,34 +53,53 @@ for (let category of typeOfEvents) {
 }
 checkBoxContainer.appendChild(fragmentCheckBox);
 
-// 3. get all checkboxes and filter
-let checkboxes = document.querySelectorAll('input[type="checkbox"]')
-checkboxes.forEach(check => check.addEventListener("change", () => {
-    let selectedChecked = [...checkboxes].filter(check => check.checked).map(elem => elem.value)
-    let cardsChecks = (filterArrayByArray(selectedChecked, data.events))
-    showCards(cardsChecks, container)
-}));
-
 function filterArrayByArray(arrayStrings, arrayObject) {
     return arrayStrings.length === 0 ? arrayObject : arrayObject.filter
-    (element => arrayStrings.includes(element.category))
+        (element => arrayStrings.includes(element.category))
 }
 
-// search filter
+let checkboxes = document.querySelectorAll('input[type="checkbox"]')
+checkboxes.forEach(check => check.addEventListener("change", () => {
+    let selectChecked = [...checkboxes].filter(check => check.checked).map(elem => elem.value)
+    let cardsChecks = (filterArrayByArray(selectChecked, data.events))
+    showCards(cardsChecks, container)
+    filterAll(data.events)
+}));
+
 let inputForm = document.getElementById('input-form')
 inputForm.addEventListener('keyup', (e) => {
-    console.log(filterArrayByString(inputForm.value, data.events))
+    inputText = inputForm.value
+    filterAll(data.events)
 })
-
 
 function filterArrayByString(value, arrayObject) {
     if (value == '') return arrayObject
     let newArray = arrayObject.
-    filter(element => element.category.toLowerCase().
-    includes(value.toLowerCase().
-    trim()))
+        filter(element => element.category.toLowerCase().
+            includes(value.toLowerCase().
+                trim()))
     return newArray
 }
 
+
 // crossing search
-// function filter
+let selectChecked = []
+let inputText = ''
+
+function filterAll(array) {
+    let newArray = []
+    if (selectChecked.length == 0 && inputText == '') {
+        newArray = array
+    } else if (selectChecked.length > 0 && inputText == '') {
+        let cardsChecksFiltered = filterArrayByArray(selectChecked, array);
+        newArray = cardsChecksFiltered;
+    } else if (selectChecked.length > 0 && inputText == '') {
+        let cardsChecksFiltered = filterArrayByString(inputText, array);
+        newArray = cardsChecksFiltered;
+    } else {
+        let cardsChecksFiltered = filterArrayByArray(selectChecked, array)
+        let checkFinalFiltered = filterArrayByString(inputText, cardsChecksFiltered)
+        newArray = checkFinalFiltered
+    }
+    showCards(newArray,container)    // solo funcionan por separado para mostrarse en html
+}
