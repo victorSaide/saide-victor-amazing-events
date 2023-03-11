@@ -21,6 +21,11 @@ function showCards(array, container){
                         Details
                     </a>
             </div>
+            <p class="fs-5 p-2">${element.date}</p>
+            <p class="fs-5 p-2">${element.category}</p>
+            <p class="fs-5 p-2">${element.place}</p>
+            <p class="fs-5 p-2">${element.capacity}</p>
+            <p class="fs-5 p-2">${element.assistance}</p>
         </div>
         `
         fragment.appendChild(div);

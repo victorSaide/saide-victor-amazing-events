@@ -47,7 +47,7 @@ for (let category of typeOfEvents) {
     div.innerHTML = `
     <label class="form-check-label">${category}
         <input class="form-check-input" value="${category}" type="checkbox" name="" id="${category}"/>
-    </label>   
+    </label>
     `
     fragmentCheckBox.appendChild(div);
 }
@@ -56,23 +56,31 @@ checkBoxContainer.appendChild(fragmentCheckBox);
 // 3. get all checkboxes and filter
 let checkboxes = document.querySelectorAll('input[type="checkbox"]')
 checkboxes.forEach(check => check.addEventListener("change", () => {
-    let selectedChecked = Array.from(checkboxes).filter(check => check.checked).map(elem => elem.value)
+    let selectedChecked = [...checkboxes].filter(check => check.checked).map(elem => elem.value)
     let cardsChecks = (filterArrayByArray(selectedChecked, data.events))
     showCards(cardsChecks, container)
 }));
 
 function filterArrayByArray(arrayStrings, arrayObject) {
-    return arrayStrings.length === 0 ? arrayObject : arrayObject.filter(element => arrayStrings.includes(element.category))
+    return arrayStrings.length === 0 ? arrayObject : arrayObject.filter
+    (element => arrayStrings.includes(element.category))
 }
 
-// search bar
-let inputForm = document.getElementById('input-form');
+// search filter
+let inputForm = document.getElementById('input-form')
 inputForm.addEventListener('keyup', (e) => {
-    filterArrayByString(inputForm.value, data.events)
+    console.log(filterArrayByString(inputForm.value, data.events))
 })
+
 
 function filterArrayByString(value, arrayObject) {
     if (value == '') return arrayObject
-    let newArray = arrayObject.filter(element => element.data.toLowerCase().includes(value).toLowerCase().trim())
+    let newArray = arrayObject.
+    filter(element => element.category.toLowerCase().
+    includes(value.toLowerCase().
+    trim()))
     return newArray
 }
+
+// crossing search
+// function filter
