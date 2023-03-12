@@ -13,8 +13,8 @@ function showCards(array, container) {
             <h5 class="card-title pt-2">${element.name}</h5>
             <p class="card-text">${element.description}</p>
             <div class="d-flex align-items-center justify-content-evenly">
-                <span class="badge text-bg-secondary p-3 align-items-center">${element.price}</span>
-                    <a class="btn w-50 p-2" href="./details.html">
+                <span class="badge text-bg-secondary p-3 align-items-center">$ ${element.price},00</span>
+                    <a href="./details.html?id=${element._id}" class="btn w-50 p-2">
                         Details
                     </a>
             </div>
