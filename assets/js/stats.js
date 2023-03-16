@@ -15,7 +15,7 @@ function showTable() {
                     <th>Events with larger capacity</th>
                 </tr>
             </thead>
-            <tbody>      <!-- +id for -- c/tr array tr -->
+            <tbody id="tabla 1">      <!-- +id for -- c/tr array tr -->
                 <tr>
                     <td></td>
                     <td></td>
@@ -93,3 +93,15 @@ function showTable() {
 }
 showTable()
 
+let urlApi = "https://mindhub-xj03.onrender.com/api/amazing";
+
+fetch(urlApi)
+    .then(response => response.json())
+    .then(data => {
+        console.log(data)
+        const eventos = data.events
+        console.log(eventos)
+
+        let mayorCapacidad = eventos.reduce((evento1,evento3) => {if})
+    
+    })
