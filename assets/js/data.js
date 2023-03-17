@@ -1,3 +1,4 @@
+// this file was replaced, in its place I was a fetch to an API
 const data = {
     "currentDate": "2022-01-01",
     "events": [

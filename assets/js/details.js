@@ -1,16 +1,23 @@
-const queryString = location.search
-console.log(queryString)
-const params = new URLSearchParams(queryString)
-const id = params.get("id")
+const container = document.getElementById('container');
+const fragment = document.createDocumentFragment();
+const urlApi = "https://mindhub-xj03.onrender.com/api/amazing";
 
-const element = data.events.find(element => element._id == id)
-const cont = document.getElementById(container);
-console.log(cont)
+fetch(urlApi)
+    .then(response => response.json())
+    .then(data => {
+        const queryString = location.search
+        console.log(queryString)
+        const params = new URLSearchParams(queryString)
+        const id = params.get("id")
 
-function showCardsDetails() {
-    let card = document.createElement('div');
-    card.className = "card d-flex col-xl-7 p-3 m-2 col-lg-3 p-3 m-2 col-md-5 p-3 m-2 col-sm-10 col-xs-10 p-2";
-    card.innerHTML = `
+        const element = data.events.find(element => element._id == id)
+        const cont = document.getElementById(container);
+        console.log(cont)
+
+        function showCardsDetails() {
+            let card = document.createElement('div');
+            card.className = "card d-flex col-xl-7 p-3 m-2 col-lg-3 p-3 m-2 col-md-5 p-3 m-2 col-sm-10 col-xs-10 p-2";
+            card.innerHTML = `
         <img src="${element.image}" class="object-fit-cover p-3" alt="events">
         <div class="card-body p-1">
             <h4 class="card-title p-2">${element.name}</h4>
@@ -23,7 +30,9 @@ function showCardsDetails() {
             <p class="fs-6 p-2">Price: $ ${element.price},00</p>
         </div>
         `
-    container.appendChild(card);
-}
+            container.appendChild(card);
+        }
 
-showCardsDetails()
+        showCardsDetails()
+
+    })

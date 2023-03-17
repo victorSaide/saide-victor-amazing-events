@@ -1,107 +1,34 @@
-const container = document.getElementById('stats');
-const fragment = document.createDocumentFragment();
-
-function showTable() {
-    let table = document.createElement('div');
-    table.className = "table";
-    table.innerHTML = `
-            <!-- ----------------------- Table 1 ----------------------->
-        <table class="table table-bordered border border-secondary bg-white">
-            <h4>Events Statistics</h4>
-            <thead class="bg-secondary text-white">
-                <tr>
-                    <th>Events with the highest percentage of attendance</th>
-                    <th>Events with the lowest percentage of attendance</th>
-                    <th>Events with larger capacity</th>
-                </tr>
-            </thead>
-            <tbody id="tabla 1">      <!-- +id for -- c/tr array tr -->
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-        <!-- ----------------------- Table 2 ----------------------- -->
-        <table class="table table-bordered border border-secondary bg-white">
-            <h4>Upcoming Events Statistics By Category</h4>
-            <thead class="bg-secondary text-white">
-                <tr>
-                    <th>Events with the highest percentage of attendance</th>
-                    <th>Events with the lowest percentage of attendance</th>
-                    <th>Events with larger capacity</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- ----------------------- Table 3 ----------------------- -->
-        <table class="table table-bordered border border-secondary bg-white">
-            <h4>Past Events Statistics By Category</h4>
-            <thead class="bg-secondary text-white">
-                <tr>
-                    <th>Events with the highest percentage of attendance</th>
-                    <th>Events with the lowest percentage of attendance</th>
-                    <th>Events with larger capacity</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-
-    `
-    container.appendChild(fragment);
-    container.appendChild(table);
-    console.log("linkeado");
-}
-showTable()
-
-let urlApi = "https://mindhub-xj03.onrender.com/api/amazing";
+const urlApi = "https://mindhub-xj03.onrender.com/api/amazing";
 
 fetch(urlApi)
     .then(response => response.json())
     .then(data => {
-        console.log(data)
-        const eventos = data.events
-        console.log(eventos)
-
-        let mayorCapacidad = eventos.reduce((evento1,evento3) => {if})
-    
+        showTable(data.events) 
     })
+
+function showTable(arrayEvents) {
+    let highestAttendance = arrayEvents.filter(evento => evento.assistance).reduce((eventoUno, eventoDos) => 
+        // if((eventoUno.assistance / eventoUno.capacity) > (eventoDos.assistance / eventoDos.capacity)) return eventoUno
+        // return eventoDos
+        (eventoUno.assistance / eventoUno.capacity) > (eventoDos.assistance / eventoDos.capacity) ? eventoUno : eventoDos
+    )
+
+    let lowestAttendance = arrayEvents.filter(evento => evento.assistance).reduce((eventoUno, eventoDos) => {
+        if((eventoUno.assistance / eventoUno.capacity) < (eventoDos.assistance / eventoDos.capacity)) return eventoUno
+        return eventoDos
+    })
+
+    let largerCapacity = arrayEvents.reduce((eventoUno, eventoDos) => {
+        if(eventoUno.capacity > eventoDos.capacity) return eventoUno
+        return eventoDos
+    })
+
+    let table = document.getElementById("first-table");
+    table.innerHTML = `
+        <tr>
+            <td>${highestAttendance.name}  (${(highestAttendance.assistance * 100 / highestAttendance.capacity).toFixed(2)}%)</td>
+            <td>${lowestAttendance.name} (${(lowestAttendance.assistance * 100 / lowestAttendance.capacity).toFixed(2)}%)</td>
+            <td>${largerCapacity.name} (${(largerCapacity.capacity)})</td>
+        </tr>
+`
+}

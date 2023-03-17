@@ -1,16 +1,23 @@
-const container = document.getElementById('container-past');
+const container = document.getElementById('container');
 const fragment = document.createDocumentFragment();
-// filtrar < cada elem data < currdate
-let currentDate = Date.parse(data.currentDate);
-let pastEventsFil = data.events.filter(element => Date.parse(element.date) < currentDate)
+const urlApi = "https://mindhub-xj03.onrender.com/api/amazing";
+
+fetch(urlApi)
+    .then(response => response.json())
+    .then(data => {
+        const container = document.getElementById('container-past');
+        const fragment = document.createDocumentFragment();
+        // filtrar < cada elem data < currdate
+        let currentDate = Date.parse(data.currentDate);
+        let pastEventsFil = data.events.filter(element => Date.parse(element.date) < currentDate)
 
 
-function showCards(array, container) {
-    for (let element of array) {
-        container.innerHTML = '';
-        let div = document.createElement('div');
-        div.className = "card d-flex col-xl-3 p-3 m-2 col-lg-3 p-3 m-2 col-md-5 p-3 m-2 col-sm-10 col-xs-10 p-2";
-        div.innerHTML = `
+        function showCards(array, container) {
+            for (let element of array) {
+                container.innerHTML = '';
+                let div = document.createElement('div');
+                div.className = "card d-flex col-xl-3 p-3 m-2 col-lg-3 p-3 m-2 col-md-5 p-3 m-2 col-sm-10 col-xs-10 p-2";
+                div.innerHTML = `
         <img src="${element.image}" class="card-img-top object-fit-cover" alt="events">
         <div class="card-body p-1">
             <h5 class="card-title pt-2">${element.name}</h5>
@@ -23,84 +30,74 @@ function showCards(array, container) {
             </div>
         </div>
         `
-        fragment.appendChild(div);
-    }
-    container.appendChild(fragment);
-}
-showCards(pastEventsFil, container);
+                fragment.appendChild(div);
+            }
+            container.appendChild(fragment);
+        }
+        showCards(pastEventsFil, container);
 
-// checkbox categories
-// 1. get unrepeated categories
-const checkBoxContainer = document.getElementById('check-box-container');
-let typeOfEvents = [];
+        // checkbox categories
+        // 1. get unrepeated categories
+        const checkBoxContainer = document.getElementById('check-box-container');
+        let typeOfEvents = [];
 
-let arrayTypeOfEvents = pastEventsFil.map(event => {
-    if (!typeOfEvents.includes(event.category)) {
-        typeOfEvents.push(event.category);
-    }
-})
-// console.log(typeOfEvents); // it shows the 7 categories
+        let arrayTypeOfEvents = pastEventsFil.map(event => {
+            if (!typeOfEvents.includes(event.category)) {
+                typeOfEvents.push(event.category);
+            }
+        })
+        // console.log(typeOfEvents); // it shows the 7 categories
 
-// 2. introducing content to html filetype
-let fragmentCheckBox = document.createDocumentFragment();
+        // 2. introducing content to html filetype
+        let fragmentCheckBox = document.createDocumentFragment();
 
-for (let category of typeOfEvents) {
-    let div = document.createElement('div');
-    div.className = "form-check px-3 d-flex justify-content-evenly";
-    div.innerHTML = `
+        for (let category of typeOfEvents) {
+            let div = document.createElement('div');
+            div.className = "form-check px-3 d-flex justify-content-evenly";
+            div.innerHTML = `
     <label class="form-check-label">${category}
         <input class="form-check-input" value="${category}" type="checkbox" name="" id="${category}"/>
     </label>
     `
-    fragmentCheckBox.appendChild(div);
-}
-checkBoxContainer.appendChild(fragmentCheckBox);
+            fragmentCheckBox.appendChild(div);
+        }
+        checkBoxContainer.appendChild(fragmentCheckBox);
 
-let selectChecked = []
-let inputText = ''
+        let selectChecked = []
+        let inputText = ''
 
-function filterArrayByArray(arrayStrings, arrayObject) {
-    return arrayStrings.length === 0 ? arrayObject : arrayObject.filter
-        (element => arrayStrings.includes(element.category))
-}
+        function filterArrayByArray(arrayStrings, arrayObject) {
+            return arrayStrings.length === 0 ? arrayObject : arrayObject.filter
+                (element => arrayStrings.includes(element.category))
+        }
 
-let checkboxes = document.querySelectorAll('input[type="checkbox"]')
-checkboxes.forEach(check => check.addEventListener("change", () => {
-    selectChecked = [...checkboxes].filter(check => check.checked).map(elem => elem.value)
-    filterAll(pastEventsFil)
-}));
+        let checkboxes = document.querySelectorAll('input[type="checkbox"]')
+        checkboxes.forEach(check => check.addEventListener("change", () => {
+            selectChecked = [...checkboxes].filter(check => check.checked).map(elem => elem.value)
+            filterAll(pastEventsFil)
+        }));
 
-let inputForm = document.getElementById('input-form')
-inputForm.addEventListener('keyup', (e) => {
-    inputText = inputForm.value
-    filterAll(pastEventsFil)
-})
+        let inputForm = document.getElementById('input-form')
+        inputForm.addEventListener('keyup', (e) => {
+            inputText = inputForm.value
+            filterAll(pastEventsFil)
+        })
 
-function filterArrayByString(value, arrayObject) {
-    if (value == '') return arrayObject
-    let newArray = arrayObject.
-        filter(element => element.name.toLowerCase().
-            includes(value.toLowerCase().
-                trim()))
-    return newArray
-}
+        function filterArrayByString(value, arrayObject) {
+            if (value == '') return arrayObject
+            let newArray = arrayObject.
+                filter(element => element.name.toLowerCase().
+                    includes(value.toLowerCase().
+                        trim()))
+            return newArray
+        }
 
-// crossing search
+        // crossing search
+        function filterAll(array) {
+            let cardsChecksFiltered = filterArrayByArray(selectChecked, array)
+            let checkFinalFiltered = filterArrayByString(inputText, cardsChecksFiltered)
+            showCards(checkFinalFiltered, container)
+        }
+    })
 
-function filterAll(array) {
-    // let newArray = []
-    // if (selectChecked.length == 0 && inputText == '') {
-    //     newArray = array
-    // } else if (selectChecked.length > 0 && inputText == '') {
-    //     let cardsChecksFiltered = filterArrayByArray(selectChecked, array);
-    //     newArray = cardsChecksFiltered;
-    // } else if (selectChecked.length > 0 && inputText == '') {
-    //     let cardsChecksFiltered = filterArrayByString(inputText, array);
-    //     newArray = cardsChecksFiltered;
-    // } else {
-        let cardsChecksFiltered = filterArrayByArray(selectChecked, array)
-        let checkFinalFiltered = filterArrayByString(inputText, cardsChecksFiltered)
-    //     newArray = checkFinalFiltered;
-    // // }
-    showCards(checkFinalFiltered,container)    // solo funcionan por separado para mostrarse en html
-}
+
