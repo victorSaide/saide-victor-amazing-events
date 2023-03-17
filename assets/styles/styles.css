@@ -86,3 +86,13 @@ body {
 
     }
 }
+
+tr{
+    font-weight: bold;
+    width: 100px;
+}
+
+.table>:not(caption)>*>* {
+    width: 30%;
+    text-align: center;
+}

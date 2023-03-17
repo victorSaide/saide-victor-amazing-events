@@ -29,22 +29,22 @@ fetch(urlApi)
             container.appendChild(fragment);
         }
         showCards(data.events, container);
-        
+
         // checkbox categories
         // 1. get unrepeated categories
         const checkBoxContainer = document.getElementById('check-box-container');
         let typeOfEvents = [];
-        
+
         let arrayTypeOfEvents = data.events.map(event => {
             if (!typeOfEvents.includes(event.category)) {
                 typeOfEvents.push(event.category);
             }
         })
         // console.log(typeOfEvents); // it shows the 7 categories
-        
+
         // 2. introducing content to html filetype
         let fragmentCheckBox = document.createDocumentFragment();
-        
+
         for (let category of typeOfEvents) {
             let div = document.createElement('div');
             div.className = "form-check px-3 d-flex justify-content-evenly";
@@ -56,27 +56,27 @@ fetch(urlApi)
             fragmentCheckBox.appendChild(div);
         }
         checkBoxContainer.appendChild(fragmentCheckBox);
-        
+
         let selectChecked = []
         let inputText = ''
-        
+
         function filterArrayByArray(arrayStrings, arrayObject) {
             return arrayStrings.length === 0 ? arrayObject : arrayObject.filter
                 (element => arrayStrings.includes(element.category))
         }
-        
+
         let checkboxes = document.querySelectorAll('input[type="checkbox"]')
         checkboxes.forEach(check => check.addEventListener("change", () => {
             selectChecked = [...checkboxes].filter(check => check.checked).map(elem => elem.value)
             filterAll(data.events)
         }));
-        
+
         let inputForm = document.getElementById('input-form')
         inputForm.addEventListener('keyup', (e) => {
             inputText = inputForm.value
             filterAll(data.events)
         })
-        
+
         function filterArrayByString(value, arrayObject) {
             if (value == '') return arrayObject
             let newArray = arrayObject.
@@ -85,12 +85,12 @@ fetch(urlApi)
                         trim()))
             return newArray
         }
-        
+
         // crossing search
         function filterAll(array) {
-                let cardsChecksFiltered = filterArrayByArray(selectChecked, array)
-                let checkFinalFiltered = filterArrayByString(inputText, cardsChecksFiltered)
-            showCards(checkFinalFiltered,container)
+            let cardsChecksFiltered = filterArrayByArray(selectChecked, array)
+            let checkFinalFiltered = filterArrayByString(inputText, cardsChecksFiltered)
+            showCards(checkFinalFiltered, container)
         }
     })
 
