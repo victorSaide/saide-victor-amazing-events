@@ -7,32 +7,35 @@ fetch(urlApi)
     .then(data => {
         const container = document.getElementById('container-future');
         const fragment = document.createDocumentFragment();
-        // filtrar < cada elem data < currdate
         let currentDate = Date.parse(data.currentDate);
         let futureEventsFil = data.events.filter(element => Date.parse(element.date) > currentDate)
 
-
         function showCards(array, container) {
-            for (let element of array) {
-                container.innerHTML = '';
-                let div = document.createElement('div');
-                div.className = "card d-flex col-xl-3 p-3 m-2 col-lg-3 p-3 m-2 col-md-5 p-3 m-2 col-sm-10 col-xs-10 p-2";
-                div.innerHTML = `
-        <img src="${element.image}" class="card-img-top object-fit-cover" alt="events">
-        <div class="card-body p-1">
-            <h5 class="card-title pt-2">${element.name}</h5>
-            <p class="card-text">${element.description}</p>
-            <div class="d-flex align-items-center justify-content-evenly">
-                <span class="badge text-bg-secondary p-3 align-items-center">$ ${element.price},00</span>
-                    <a href="./details.html?id=${element._id}" class="btn w-50 p-2">
-                        Details
-                    </a>
-            </div>
-        </div>
-        `
-                fragment.appendChild(div);
+            if (array.length === 0) {
+                container.innerHTML = ''
+                messageFailedSearch()
+            } else {
+                for (let element of array) {
+                    container.innerHTML = '';
+                    let div = document.createElement('div');
+                    div.className = "card d-flex col-xl-3 p-3 m-2 col-lg-3 p-3 m-2 col-md-5 p-3 m-2 col-sm-10 col-xs-10 p-2";
+                    div.innerHTML = `
+                <img src="${element.image}" class="card-img-top object-fit-cover" alt="events">
+                <div class="card-body p-1">
+                    <h5 class="card-title pt-2">${element.name}</h5>
+                    <p class="card-text">${element.description}</p>
+                    <div class="d-flex align-items-center justify-content-evenly">
+                        <span class="badge text-bg-secondary p-3 align-items-center">$ ${element.price},00</span>
+                            <a href="./details.html?id=${element._id}" class="btn w-50 p-2">
+                                Details
+                            </a>
+                    </div>
+                </div>
+                `
+                    fragment.appendChild(div);
+                }
+                container.appendChild(fragment);
             }
-            container.appendChild(fragment);
         }
         showCards(futureEventsFil, container);
 
@@ -99,5 +102,12 @@ fetch(urlApi)
             showCards(checkFinalFiltered, container)
         }
 
+        // if there is no card, write this msg
+        function messageFailedSearch() {
+            let message = document.createElement('div')
+            message.className = "p-msg";
+            message.textContent = "We are sorry!, the search returned no results, please try a different search.";
+            container.append(message)
+        }
     })
 

@@ -107,7 +107,7 @@ tr{
 }
 
 .p-msg {
-    background-color: rgb(203, 27, 27);
+    background-color: #cb1b1b;
     padding: 5vh;
     width: 90%;
     border-radius: 15px;
@@ -115,4 +115,15 @@ tr{
     font-size: 3vh;
     color: white;
     font-weight: bold;
+}
+
+.goBack{
+    background-image: url('https://icons8.com/icon/39977/go-back');
+    height: 100px;
+    background-color: #cb1b1b;
+}
+
+button > a {
+    text-decoration: none;
+    color: antiquewhite;
 }
