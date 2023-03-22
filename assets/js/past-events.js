@@ -5,6 +5,11 @@ const urlApi = "https://mindhub-xj03.onrender.com/api/amazing";
 fetch(urlApi)
     .then(response => response.json())
     .then(data => {
+        const container = document.getElementById('container-past');
+        const fragment = document.createDocumentFragment();
+        let currentDate = Date.parse(data.currentDate);
+        let pastEventsFil = data.events.filter(element => Date.parse(element.date) < currentDate)
+
         function showCards(array, container) {
             if (array.length === 0) {
                 container.innerHTML = ''
@@ -32,18 +37,17 @@ fetch(urlApi)
                 container.appendChild(fragment);
             }
         }
-        showCards(data.events, container);
+        showCards(pastEventsFil, container);
 
         // checkbox categories
         const checkBoxContainer = document.getElementById('check-box-container');
         let typeOfEvents = [];
 
-        let arrayTypeOfEvents = data.events.map(event => {
+        let arrayTypeOfEvents = pastEventsFil.map(event => {
             if (!typeOfEvents.includes(event.category)) {
                 typeOfEvents.push(event.category);
             }
         })
-
         let fragmentCheckBox = document.createDocumentFragment();
 
         for (let category of typeOfEvents) {
@@ -69,13 +73,13 @@ fetch(urlApi)
         let checkboxes = document.querySelectorAll('input[type="checkbox"]')
         checkboxes.forEach(check => check.addEventListener("change", () => {
             selectChecked = [...checkboxes].filter(check => check.checked).map(elem => elem.value)
-            filterAll(data.events)
+            filterAll(pastEventsFil)
         }));
 
         let inputForm = document.getElementById('input-form')
         inputForm.addEventListener('keyup', (e) => {
             inputText = inputForm.value
-            filterAll(data.events)
+            filterAll(pastEventsFil)
         })
 
         function filterArrayByString(value, arrayObject) {
@@ -97,9 +101,9 @@ fetch(urlApi)
         // if there is no card, write this msg
         function messageFailedSearch() {
             let message = document.createElement('div')
-            message.className="p-msg";
+            message.className = "p-msg";
             message.textContent = "We are sorry!, the search returned no results, please try a different search.";
             container.append(message)
         }
-    })
 
+    })

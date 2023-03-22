@@ -5,6 +5,11 @@ const urlApi = "https://mindhub-xj03.onrender.com/api/amazing";
 fetch(urlApi)
     .then(response => response.json())
     .then(data => {
+        const container = document.getElementById('container-future');
+        const fragment = document.createDocumentFragment();
+        let currentDate = Date.parse(data.currentDate);
+        let futureEventsFil = data.events.filter(element => Date.parse(element.date) > currentDate)
+
         function showCards(array, container) {
             if (array.length === 0) {
                 container.innerHTML = ''
@@ -32,28 +37,31 @@ fetch(urlApi)
                 container.appendChild(fragment);
             }
         }
-        showCards(data.events, container);
+        showCards(futureEventsFil, container);
 
         // checkbox categories
+        // 1. get unrepeated categories
         const checkBoxContainer = document.getElementById('check-box-container');
         let typeOfEvents = [];
 
-        let arrayTypeOfEvents = data.events.map(event => {
+        let arrayTypeOfEvents = futureEventsFil.map(event => {
             if (!typeOfEvents.includes(event.category)) {
                 typeOfEvents.push(event.category);
             }
         })
+        // console.log(typeOfEvents); // it shows the 7 categories
 
+        // 2. introducing content to html filetype
         let fragmentCheckBox = document.createDocumentFragment();
 
         for (let category of typeOfEvents) {
             let div = document.createElement('div');
             div.className = "form-check px-3 d-flex justify-content-evenly";
             div.innerHTML = `
-            <label class="form-check-label">${category}
-                <input class="form-check-input" value="${category}" type="checkbox" name="" id="${category}"/>
-            </label>
-            `
+    <label class="form-check-label">${category}
+        <input class="form-check-input" value="${category}" type="checkbox" name="" id="${category}"/>
+    </label>
+    `
             fragmentCheckBox.appendChild(div);
         }
         checkBoxContainer.appendChild(fragmentCheckBox);
@@ -69,13 +77,13 @@ fetch(urlApi)
         let checkboxes = document.querySelectorAll('input[type="checkbox"]')
         checkboxes.forEach(check => check.addEventListener("change", () => {
             selectChecked = [...checkboxes].filter(check => check.checked).map(elem => elem.value)
-            filterAll(data.events)
+            filterAll(futureEventsFil)
         }));
 
         let inputForm = document.getElementById('input-form')
         inputForm.addEventListener('keyup', (e) => {
             inputText = inputForm.value
-            filterAll(data.events)
+            filterAll(futureEventsFil)
         })
 
         function filterArrayByString(value, arrayObject) {
@@ -97,7 +105,7 @@ fetch(urlApi)
         // if there is no card, write this msg
         function messageFailedSearch() {
             let message = document.createElement('div')
-            message.className="p-msg";
+            message.className = "p-msg";
             message.textContent = "We are sorry!, the search returned no results, please try a different search.";
             container.append(message)
         }
