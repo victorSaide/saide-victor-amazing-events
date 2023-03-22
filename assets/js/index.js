@@ -5,13 +5,16 @@ const urlApi = "https://mindhub-xj03.onrender.com/api/amazing";
 fetch(urlApi)
     .then(response => response.json())
     .then(data => {
-        console.log(data)
         function showCards(array, container) {
-            for (let element of array) {
-                container.innerHTML = '';
-                let div = document.createElement('div');
-                div.className = "card d-flex col-xl-3 p-3 m-2 col-lg-3 p-3 m-2 col-md-5 p-3 m-2 col-sm-10 col-xs-10 p-2";
-                div.innerHTML = `
+            if (array.length === 0) {
+                container.innerHTML = ''
+                messageFailedSearch()
+            } else {
+                for (let element of array) {
+                    container.innerHTML = '';
+                    let div = document.createElement('div');
+                    div.className = "card d-flex col-xl-3 p-3 m-2 col-lg-3 p-3 m-2 col-md-5 p-3 m-2 col-sm-10 col-xs-10 p-2";
+                    div.innerHTML = `
                 <img src="${element.image}" class="card-img-top object-fit-cover" alt="events">
                 <div class="card-body p-1">
                     <h5 class="card-title pt-2">${element.name}</h5>
@@ -24,14 +27,14 @@ fetch(urlApi)
                     </div>
                 </div>
                 `
-                fragment.appendChild(div);
+                    fragment.appendChild(div);
+                }
+                container.appendChild(fragment);
             }
-            container.appendChild(fragment);
         }
         showCards(data.events, container);
 
         // checkbox categories
-        // 1. get unrepeated categories
         const checkBoxContainer = document.getElementById('check-box-container');
         let typeOfEvents = [];
 
@@ -40,9 +43,7 @@ fetch(urlApi)
                 typeOfEvents.push(event.category);
             }
         })
-        // console.log(typeOfEvents); // it shows the 7 categories
 
-        // 2. introducing content to html filetype
         let fragmentCheckBox = document.createDocumentFragment();
 
         for (let category of typeOfEvents) {
@@ -91,6 +92,14 @@ fetch(urlApi)
             let cardsChecksFiltered = filterArrayByArray(selectChecked, array)
             let checkFinalFiltered = filterArrayByString(inputText, cardsChecksFiltered)
             showCards(checkFinalFiltered, container)
+        }
+
+        // if there is no card, write this msg
+        function messageFailedSearch() {
+            let message = document.createElement('div')
+            message.className="p-msg";
+            message.textContent = "We are sorry!, the search returned no results, please try a different search.";
+            container.append(message)
         }
     })
 

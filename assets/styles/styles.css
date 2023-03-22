@@ -1,3 +1,12 @@
+/* main{
+    min-height: 100vh;
+    grid-template-rows: auto 1fr auto;
+} */
+main{
+    min-height: 60vh;
+    grid-template-rows: auto 1fr auto;
+}
+
 .logo-img {
     height: 30px;
 }
@@ -95,4 +104,15 @@ tr{
 .table>:not(caption)>*>* {
     width: 30%;
     text-align: center;
+}
+
+.p-msg {
+    background-color: rgb(203, 27, 27);
+    padding: 5vh;
+    width: 90%;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 3vh;
+    color: white;
+    font-weight: bold;
 }

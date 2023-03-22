@@ -11,7 +11,6 @@ fetch(urlApi)
         let currentDate = Date.parse(data.currentDate);
         let pastEventsFil = data.events.filter(element => Date.parse(element.date) < currentDate)
 
-
         function showCards(array, container) {
             for (let element of array) {
                 container.innerHTML = '';
